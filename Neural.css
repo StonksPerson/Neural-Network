@@ -1,0 +1,42 @@
+#enemy {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    position: absolute;
+    background-image: url(consider\ the\ following.png);
+    background-size: 100px 100px;
+    
+}
+
+body {
+    background-color: lightblue;
+}
+
+#velocity {
+    margin: auto;
+    text-align: center;
+    color: whitesmoke;
+    font-size: 200px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.trail {
+    animation: fade 0.1s;
+    opacity: 0;
+    border-radius: 100%;
+}
+
+#best {
+    margin: auto;
+    text-align: center;
+    color: rgb(100, 132, 169);
+    font-size: 100px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+@keyframes fade {
+    0% {opacity: 100; background-color: rgb(37, 37, 255);}
+    25% {opacity: 50; background-color: rgb(255, 50, 50);}
+    50% {opacity: 50; background-color: orange;}
+    100% {opacity: 0; background-color: rgb(255, 213, 0);}
+}
