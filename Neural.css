@@ -5,7 +5,17 @@
     position: absolute;
     background-image: url(consider\ the\ following.png);
     background-size: 100px 100px;
-    
+    border-radius: 100%;
+}
+
+#network {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    position: absolute;
+    background-image: url(469564565.jpg);
+    background-size: 100px 100px;
+    border-radius: 100%;
 }
 
 body {
