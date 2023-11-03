@@ -1,7 +1,7 @@
 var enemyData = {x:0, vx:0 , y:0, vy:0}
 const enemy = document.getElementById("enemy")
 const network = document.getElementById("network")
-var networkData = {x: 0, vx: 0, y: 0, vy: 0, rot: 0}
+var networkData = {x: 0, y: 0, rot: 0, v: 0}
 var time = Date()
 var d_time = Date(0)
 const input_n = 2
@@ -28,7 +28,7 @@ if(started === false){
 function createNeurons() {
 
     for(i = 0; i < input_n; i++){
-        neurons.push(0);
+        neurons.push({charge: 0});
     }
 
     for(c = 0; c < n_colums; c++){
@@ -49,21 +49,20 @@ function createNeurons() {
         }
     }
 
-
     for(o = 0; o < output_n; o++){
-        for(i = 0; i < output_n; i ++){
-            for(i = 0; i < n_rows; i++){
-                currentNeuron.push({ ref : i + ((n_rows * (n_colums - 1)) + input_n), wt : 0})
-            }
+        for(e = 0; e < n_rows; e++){
+            currentNeuron.push({ ref : e + ((n_rows * (n_colums - 1)) + input_n), wt : 0})
         }
+        neurons.push({ connections: currentNeuron, charge: 0})
+        currentNeuron = [];
     }
 
 }
 
 function scrambleBrain() {
-    for(i = input_n; i < neurons.length - input_n; i++){
+    for(i = input_n; i < neurons.length; i++){
         for(s = 0; s < neurons[i].connections.length; s++){
-            neurons[i].connections[s].wt = (Math.random());
+            neurons[i].connections[s].wt = Math.floor(Math.random() * 100) / 100;
         }
     }
 }
@@ -75,21 +74,29 @@ function Tick() {
 }
 
 function networkTick() {
-    neurons[0] = (Math.atan((networkData.y - enemyData.y)/(networkData.x - enemyData.x)));
-    neurons[1] = Math.sqrt(((networkData.y - enemyData.y)^2) + ((networkData.x - enemyData.x)^2));
+    neurons[0].charge = Math.floor(Math.atan((networkData.y - enemyData.y)/(networkData.x - enemyData.x)) * 100);
+    neurons[1].charge = Math.floor(Math.sqrt((Math.pow(networkData.y - enemyData.y, 2)) + Math.pow(networkData.x - enemyData.x, 2)) * 100) / 100;
 
     for(i = input_n; i < neurons.length; i++){
-        for(e = 0; e < neurons[i].connections.length; i++){
-            neurons[i].charge += neurons[neurons[i].connections[e].ref].charge * neurons[i].connections[e].wt
-        }
+            neurons[i].charge = 0;
     }
 
-    network.style.bottom = "calc(" + String((networkData.y - size)) + "px" + " +" + " 50vh)"
-    network.style.left = "calc(" + String((networkData.x - size)) + "px" + " +" + " 50vw)"
-    network.style.rotate = String(networkData.rot) + "deg"
-    network.style.width = String(100) + "px"
-    network.style.height = String(100) + "px"
 
+    for(i = input_n; i < neurons.length; i++){
+        for(e = 0; e < neurons[i].connections.length; e++){
+            neurons[i].charge += (neurons[(neurons[i].connections[e].ref)].charge * neurons[i].connections[e].wt);
+        }
+        neurons[i].charge = neurons[i].charge / neurons[i].connections.length;
+    }
+
+    networkData.v = neurons[neurons.length - output_n];
+    networkData.rot += neurons[neurons.length - output_n];
+        
+    network.style.bottom = "calc(" + String((networkData.y - size)) + "px" + " +" + " 50vh)";
+    network.style.left = "calc(" + String((networkData.x - size)) + "px" + " +" + " 50vw)";
+    network.style.rotate = String(networkData.rot) + "deg";
+    network.style.width = String(100) + "px";
+    network.style.height = String(100) + "px";
 }
 
 
